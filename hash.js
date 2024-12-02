@@ -83,6 +83,9 @@ export default class Hashmap {
     }
   }
 
+  length() {
+    return this.capacity;
+  }
   resize() {
     let oldList = this.list;
     this.list = Array.from({ length: this.list.length * 2 }, () => []);
