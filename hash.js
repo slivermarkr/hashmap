@@ -66,10 +66,21 @@ export default class Hashmap {
   }
 
   has(key) {
-    if (!this.get(key)) {
+    return this.get(key) !== null;
+  }
+
+  remove(key) {
+    let b = this.bucket(key);
+    if (!b) {
       return false;
     }
-    return true;
+    for (let i = 0; i < b.length; i++) {
+      if (b[i].key === key) {
+        b.splice(i, 1);
+        this.capacity--;
+        return true;
+      }
+    }
   }
 
   resize() {
