@@ -18,8 +18,8 @@ export default class Hashmap {
   bucket(key) {
     let pre = this.prehash(key);
     let hash = pre % this.list.length;
-    
-    if (hash < 0 || hash > this.list.length) {
+
+    if (hash < 0 || hash >= this.list.length) {
       throw new Error("Trying to access index out of bound");
     } else {
       return this.list[hash];
@@ -60,9 +60,16 @@ export default class Hashmap {
     let e = this.entry(b, key);
 
     if (e) {
-      return e;
+      return e.value;
     }
     return null;
+  }
+
+  has(key) {
+    if (!this.get(key)) {
+      return false;
+    }
+    return true;
   }
 
   resize() {
