@@ -1,6 +1,6 @@
 export default class Hashmap {
   constructor() {
-    this.list = new Array(21);
+    this.list = [[], [], []];
     this.loadFactor = undefined;
     this.capacity = 0;
   }
@@ -16,9 +16,10 @@ export default class Hashmap {
   }
 
   bucket(key) {
-    const pre = this.prehash(key);
+    let pre = this.prehash(key);
+    console.log("Pre", pre);
     let hash = pre % this.list.length;
-
+    console.log("hash", hash);
     if (hash < 0 || hash > this.list.length) {
       throw new Error("Trying to access index out of bound");
     } else {
@@ -26,8 +27,8 @@ export default class Hashmap {
     }
   }
 
-  entry(bucket, key) {
-    for (const buck of bucket) {
+  entry(bucketList, key) {
+    for (let buck of bucketList) {
       if (buck.key === key) {
         return buck;
       }
@@ -36,21 +37,28 @@ export default class Hashmap {
   }
 
   set(key, value) {
-    // look if value is present ? overwrite : set
     let b = this.bucket(key);
     let e = this.entry(b, key);
-    if (e) {
+    if (e !== null) {
       e.value = value;
       return;
-    } else {
-      b.push({ key, value });
-
-      this.capacity++;
-      this.loadFactor = this.capacity / this.list.length;
-      if (this.loadFactor > 0.8) {
-        // TODO: increase the length of the list;
-        this.list.length = this.list.length * 2;
-      }
     }
+    b.push({ key, value });
+    this.capacity++;
+    this.loadFactor = this.capacity / this.list.length;
+    if (this.loadFactor > 0.8) {
+      // TODO: increase the length of the list;
+      this.list.length = this.list.length * 2;
+    }
+  }
+
+  get(key) {
+    let b = this.bucket(key);
+    let e = this.entry(b, key);
+
+    if (e) {
+      return e;
+    }
+    return null;
   }
 }
