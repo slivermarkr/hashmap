@@ -111,6 +111,18 @@ export default class Hashmap {
     }
     return arrOfKeys;
   }
+
+  values() {
+    const arrOfValues = [];
+    const keys = this.keys();
+
+    for (let i = 0; i < keys.length; i++) {
+      arrOfValues.push(this.get(keys[i]));
+    }
+
+    return arrOfValues;
+  }
+
   resize() {
     let oldList = this.map;
     this.map = Array.from({ length: this.map.length * 2 }, () => []);
