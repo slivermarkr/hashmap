@@ -1,8 +1,10 @@
 export default class Hashmap {
   constructor() {
-    this.list = Array.from({ length: 21 }, () => []);
-    this.loadFactor = undefined;
-    this.capacity = 0;
+    this.initLen = 3;
+    this.map = Array.from({ length: this.initLen }, () => []);
+    this.loadFactor = 0.8;
+    this.capacity = this.loadFactor * this.map.length;
+    this.mapSize = 0;
   }
 
   prehash(keyString) {
@@ -17,12 +19,12 @@ export default class Hashmap {
 
   bucket(key) {
     let pre = this.prehash(key);
-    let hash = pre % this.list.length;
+    let hash = pre % this.map.length;
 
-    if (hash < 0 || hash >= this.list.length) {
+    if (hash < 0 || hash >= this.map.length) {
       throw new Error("Trying to access index out of bound");
     } else {
-      return this.list[hash];
+      return this.map[hash];
     }
   }
 
@@ -45,11 +47,9 @@ export default class Hashmap {
     }
 
     b.push({ key, value });
+    this.mapSize++;
 
-    this.capacity++;
-    this.loadFactor = this.capacity / this.list.length;
-
-    if (this.loadFactor > 0.8) {
+    if (this.mapSize > this.capacity) {
       // TODO: increase the length of the list;
       this.resize();
     }
@@ -69,6 +69,10 @@ export default class Hashmap {
     return this.get(key) !== null;
   }
 
+  length() {
+    return this.mapSize;
+  }
+
   remove(key) {
     let b = this.bucket(key);
     if (!b) {
@@ -77,19 +81,28 @@ export default class Hashmap {
     for (let i = 0; i < b.length; i++) {
       if (b[i].key === key) {
         b.splice(i, 1);
-        this.capacity--;
+        this.mapSize--;
         return true;
       }
     }
   }
 
-  length() {
-    return this.capacity;
+  clear() {
+    for (const bucket of this.map) {
+      if (bucket.length) {
+        bucket.splice(0, bucket.length);
+      }
+    }
+    // Reset to initial values
+    this.map = Array.from({ length: this.initLen }, () => []);
+    this.mapSize = 0;
   }
+
   resize() {
-    let oldList = this.list;
-    this.list = Array.from({ length: this.list.length * 2 }, () => []);
-    this.capacity = 0;
+    let oldList = this.map;
+    this.map = Array.from({ length: this.map.length * 2 }, () => []);
+    this.capacity = this.loadFactor * this.map.length;
+    this.mapSize = 0;
 
     for (const bucket of oldList) {
       for (const { key, value } of bucket) {
