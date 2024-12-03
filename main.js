@@ -42,3 +42,5 @@ console.log(test.has("kite")); // false
 console.log("KEYS: ", test.keys());
 console.log("VALUES: ", test.values());
 console.log("ENTRIES: ", test.entries());
+test.clear();
+console.log(test.map);
