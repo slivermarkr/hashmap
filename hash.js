@@ -123,6 +123,19 @@ export default class Hashmap {
     return arrOfValues;
   }
 
+  entries() {
+    const arrOfEnt = [];
+    const keys = this.keys();
+
+    for (let i = 0; i < keys.length; i++) {
+      let b = this.bucket(keys[i]);
+      if (b) {
+        arrOfEnt.push(this.entry(b, keys[i]));
+      }
+    }
+
+    return arrOfEnt;
+  }
   resize() {
     let oldList = this.map;
     this.map = Array.from({ length: this.map.length * 2 }, () => []);
