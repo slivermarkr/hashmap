@@ -98,6 +98,19 @@ export default class Hashmap {
     this.mapSize = 0;
   }
 
+  keys() {
+    const arrOfKeys = [];
+    for (const bucket of this.map) {
+      if (bucket.length) {
+        for (const buck of bucket) {
+          if (buck) {
+            arrOfKeys.push(buck.key);
+          }
+        }
+      }
+    }
+    return arrOfKeys;
+  }
   resize() {
     let oldList = this.map;
     this.map = Array.from({ length: this.map.length * 2 }, () => []);
