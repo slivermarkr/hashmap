@@ -1,6 +1,6 @@
 export default class Hashmap {
   constructor() {
-    this.initLen = 3;
+    this.initLen = 16;
     this.map = Array.from({ length: this.initLen }, () => []);
     this.loadFactor = 0.8;
     this.capacity = this.loadFactor * this.map.length;
